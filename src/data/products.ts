@@ -15,12 +15,13 @@ export interface Product {
   collection: 'men' | 'women' | 'unisex';
 }
 
-import productGlasses from "@/assets/product-glasses-1.jpg";
-import productSunglasses from "@/assets/product-sunglasses-1.jpg";
-import productDetail1 from "@/assets/product-detail-1.jpg";
-import productDetail2 from "@/assets/product-detail-2.jpg";
-import productDetail3 from "@/assets/product-detail-3.jpg";
-import productDetail4 from "@/assets/product-detail-4.jpg";
+// Image paths - use relative URLs instead of imports
+const productGlasses = '/src/assets/product-glasses-1.jpg';
+const productSunglasses = '/src/assets/product-sunglasses-1.jpg';
+const productDetail1 = '/src/assets/product-detail-1.jpg';
+const productDetail2 = '/src/assets/product-detail-2.jpg';
+const productDetail3 = '/src/assets/product-detail-3.jpg';
+const productDetail4 = '/src/assets/product-detail-4.jpg';
 
 export const products: Product[] = [
   {
