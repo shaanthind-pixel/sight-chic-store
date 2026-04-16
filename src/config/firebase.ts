@@ -3,22 +3,22 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration is loaded from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyAQO4dKedc8GfGPjM38cg13wvR1Th1EsAo",
-  authDomain: "sight-chic-store.firebaseapp.com",
-  projectId: "sight-chic-store",
-  storageBucket: "sight-chic-store.firebasestorage.app",
-  messagingSenderId: "331698206304",
-  appId: "1:331698206304:web:7f6b0ac5e9ed9e83b5f505",
-  measurementId: "G-816JZYQXL8"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Analytics
-const analytics = getAnalytics(app);
+// Initialize Analytics (only in browser)
+const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 
 // Initialize Firestore
 export const db = getFirestore(app);
