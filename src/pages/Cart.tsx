@@ -183,9 +183,11 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-              <Button className="w-full mt-6 bg-accent hover:bg-accent/90 text-accent-foreground">
-                Proceed to Checkout
-              </Button>
+              <Link to="/checkout">
+                <Button className="w-full mt-6 bg-accent hover:bg-accent/90 text-accent-foreground">
+                  Proceed to Checkout
+                </Button>
+              </Link>
             </Card>
           </div>
           </div>

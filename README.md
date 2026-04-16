@@ -1,73 +1,207 @@
-# Welcome to your Lovable project
+# Sight Chic Store - E-commerce Website
 
-## Project info
+A modern e-commerce website built with React, TypeScript, Vite, and Tailwind CSS featuring payment gateway integration.
 
-**URL**: https://lovable.dev/projects/7429595d-dda6-4834-8561-0b49eff545c7
+## Features
 
-## How can I edit this code?
+- 🛍️ Product catalog with dynamic database integration
+- 🛒 Shopping cart functionality
+- 💳 Payment integration with Stripe and Razorpay
+- 📱 Responsive design
+- 🎨 Modern UI with ShadCN components
+- 🗄️ Firebase Firestore for product data
+- ☁️ Cloud Storage for product images
+- ⚡ Real-time product updates
 
-There are several ways of editing your application.
+## Payment Gateways
 
-**Use Lovable**
+This project includes integration with two popular payment gateways:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7429595d-dda6-4834-8561-0b49eff545c7) and start prompting.
+### Stripe
+- Supports credit/debit cards
+- Secure payment processing
+- International payments
 
-Changes made via Lovable will be committed automatically to this repo.
+### Razorpay
+- Popular in India
+- Supports UPI, Net Banking, Cards, and Wallets
+- INR currency support
 
-**Use your preferred IDE**
+## Setup Instructions
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js & npm installed
+- Git
+- Firebase account (free tier available)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
-
+1. Clone the repository:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
+cd sight-chic-store
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
+```sh
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Database Setup (Firebase/Firestore)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+#### Step 1: Create Firebase Project
+1. Go to [Firebase Console](https://console.firebase.google.com)
+2. Click "Add project"
+3. Enter project name and create project
 
-**Use GitHub Codespaces**
+#### Step 2: Enable Firestore Database
+1. In Firebase Console, go to "Build" → "Firestore Database"
+2. Click "Create Database"
+3. Start in test mode (for development)
+4. Select your region and create
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+#### Step 3: Enable Cloud Storage
+1. Go to "Build" → "Storage"
+2. Click "Get Started"
+3. Start in test mode and create
 
-## What technologies are used for this project?
+#### Step 4: Get Firebase Config
+1. Go to Project Settings (gear icon)
+2. Scroll to "Your apps" section
+3. Click the web app (or create one)
+4. Copy the firebaseConfig object
 
-This project is built with:
+#### Step 5: Configure Environment Variables
+1. Create `.env.local` file in project root (copy from .env.example)
+2. Add your Firebase configuration:
+```
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+#### Step 6: Seed Database with Products
+1. Go to `http://localhost:8080/admin`
+2. Click "Seed Database" button
+3. Products will be automatically added to Firestore
 
-## How can I deploy this project?
+#### Step 7: Firestore Security Rules (Important!)
+For production, update your Firestore security rules:
 
-Simply open [Lovable](https://lovable.dev/projects/7429595d-dda6-4834-8561-0b49eff545c7) and click on Share -> Publish.
+```rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read for all users
+    match /products/{document=**} {
+      allow read;
+      allow write: if request.auth != null;
+    }
+  }
+}
+```
 
-## Can I connect a custom domain to my Lovable project?
+### Payment Gateway Configuration
 
-Yes, you can!
+#### For Stripe:
+1. Create a Stripe account at [stripe.com](https://stripe.com)
+2. Get your publishable key from the Stripe dashboard
+3. Replace `pk_test_your_stripe_publishable_key_here` in `src/pages/Checkout.tsx` with your actual key
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+#### For Razorpay:
+1. Create a Razorpay account at [razorpay.com](https://razorpay.com)
+2. Get your Key ID from the Razorpay dashboard
+3. Replace `your_razorpay_key_id` in `src/pages/Checkout.tsx` with your actual key
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+#### Backend Setup (Required for Production)
+For production use, you'll need a backend server to:
+- Create payment intents (Stripe)
+- Create orders (Razorpay)
+- Handle webhooks for payment confirmation
+
+Example backend endpoints needed:
+- `POST /api/create-payment-intent` (Stripe)
+- `POST /api/create-razorpay-order` (Razorpay)
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── ui/          # ShadCN UI components
+│   └── SharedComponents.tsx
+├── config/
+│   └── firebase.ts  # Firebase configuration
+├── contexts/
+│   ├── CartContext.tsx
+│   ├── WishlistContext.tsx
+│   └── ProductContext.tsx     # Products from Firestore
+├── data/
+│   └── products.ts  # Initial product data
+├── pages/
+│   ├── Cart.tsx
+│   ├── Checkout.tsx     # Payment integration
+│   ├── Admin.tsx        # Database management
+│   ├── Home.tsx
+│   └── ...
+├── services/
+│   └── firestoreService.ts  # Firestore operations
+├── utils/
+│   └── seedDatabase.ts  # Database seeding utility
+└── App.tsx
+```
+
+## Technologies Used
+
+- **Frontend**: React, TypeScript, Vite
+- **Styling**: Tailwind CSS, ShadCN UI
+- **Database**: Firebase Firestore
+- **Storage**: Firebase Cloud Storage
+- **Payments**: Stripe, Razorpay
+- **State Management**: React Context
+- **Routing**: React Router
+
+## Development
+
+```sh
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
+```
+
+## Admin Panel
+
+Access the admin panel at `http://localhost:8080/admin` to:
+- View database connection status
+- See all products in database
+- Seed database with initial products
+- Monitor product counts
+- View Firebase setup instructions
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
